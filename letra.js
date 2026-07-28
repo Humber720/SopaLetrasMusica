@@ -116,48 +116,18 @@ tablero.push(fila);
 }
 
 
-// colocar palabras asegurando que todas entren
-
-let correcto=false;
-
-while(!correcto){
-
-tablero=[];
 
 
-for(let i=0;i<tamaño;i++){
-
-let fila=[];
-
-for(let j=0;j<tamaño;j++){
-
-fila.push("");
-
-}
-
-tablero.push(fila);
-
-}
+// colocar palabras
 
 
-
-correcto=true;
-
-
-for(let p of palabras){
-
-if(!colocarPalabra(p)){
-
-correcto=false;
-
-break;
-
-}
-
-}
+palabras.forEach(p=>{
 
 
-}
+colocarPalabra(p);
+
+
+});
 
 
 
@@ -342,20 +312,13 @@ letra.dataset.col=j;
 
 
 
-letra.addEventListener("click",function(){
+letra.onclick=function(){
+
 
 seleccionar(letra);
 
-});
 
-
-letra.addEventListener("touchstart",function(e){
-
-e.preventDefault();
-
-seleccionar(letra);
-
-},{passive:false});
+};
 
 
 
@@ -372,6 +335,9 @@ div.appendChild(letra);
 }
 
 
+
+
+
 // ===============================
 // SELECCIONAR LETRAS
 // ===============================
@@ -380,7 +346,7 @@ div.appendChild(letra);
 function seleccionar(celda){
 
 
-celda.classList.add("seleccionada");
+celda.classList.toggle("seleccionada");
 
 
 let texto=
