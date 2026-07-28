@@ -116,18 +116,48 @@ tablero.push(fila);
 }
 
 
+// colocar palabras asegurando que todas entren
+
+let correcto=false;
+
+while(!correcto){
+
+tablero=[];
 
 
-// colocar palabras
+for(let i=0;i<tamaño;i++){
+
+let fila=[];
+
+for(let j=0;j<tamaño;j++){
+
+fila.push("");
+
+}
+
+tablero.push(fila);
+
+}
 
 
-palabras.forEach(p=>{
+
+correcto=true;
 
 
-colocarPalabra(p);
+for(let p of palabras){
+
+if(!colocarPalabra(p)){
+
+correcto=false;
+
+break;
+
+}
+
+}
 
 
-});
+}
 
 
 
