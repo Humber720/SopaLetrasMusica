@@ -312,13 +312,20 @@ letra.dataset.col=j;
 
 
 
-letra.onclick=function(){
-
+letra.addEventListener("click",function(){
 
 seleccionar(letra);
 
+});
 
-};
+
+letra.addEventListener("touchstart",function(e){
+
+e.preventDefault();
+
+seleccionar(letra);
+
+},{passive:false});
 
 
 
@@ -335,9 +342,6 @@ div.appendChild(letra);
 }
 
 
-
-
-
 // ===============================
 // SELECCIONAR LETRAS
 // ===============================
@@ -346,7 +350,7 @@ div.appendChild(letra);
 function seleccionar(celda){
 
 
-celda.classList.toggle("seleccionada");
+celda.classList.add("seleccionada");
 
 
 let texto=
