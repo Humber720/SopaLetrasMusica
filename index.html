@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Sopa de Letras - Tecnología Musical</title>
+
+<link rel="stylesheet" href="estilo.css">
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<h1>🎵 SOPA DE LETRAS</h1>
+
+<h2>TECNOLOGÍA MUSICAL</h2>
+
+</header>
+
+
+
+<div class="contenedor">
+
+
+
+<div class="registro">
+
+
+<label>
+👤 Nombre del estudiante:
+</label>
+
+
+<input 
+type="text"
+id="nombre"
+placeholder="Escribe tu nombre completo">
+
+
+
+<button onclick="iniciarJuego()">
+▶️ INICIAR
+</button>
+
+
+</div>
+
+
+
+
+<div class="informacion">
+
+
+<div>
+⏱ Tiempo:
+<span id="tiempo">
+00:00
+</span>
+</div>
+
+
+<div>
+⭐ Puntaje:
+<span id="puntaje">
+0
+</span>
+</div>
+
+
+
+<button onclick="reiniciarJuego()">
+🔄 Reiniciar
+</button>
+
+
+</div>
+
+
+
+
+
+<div id="tablero"></div>
+
+
+
+
+<div class="lista">
+
+
+<h3>
+🔎 Palabras a encontrar
+</h3>
+
+
+<ul id="listaPalabras">
+
+<li>ABLETON</li>
+<li>TECNOLOGIAMUSICAL</li>
+<li>COURSERA</li>
+<li>FINALE</li>
+<li>GARAGEBAND</li>
+<li>LOGICPRO</li>
+<li>MUSICGARDEN</li>
+<li>SIMPLYPIANO</li>
+<li>TENUTO</li>
+<li>AURALIA</li>
+<li>EARMASTER</li>
+<li>FLSTUDIO</li>
+<li>GUITARTUNA</li>
+<li>MUSESCORE</li>
+<li>SIBELIUS</li>
+<li>SOLFA</li>
+<li>YOUSICIAN</li>
+
+
+</ul>
+
+
+</div>
+
+
+
+
+<div id="resultado"></div>
+
+
+
+</div>
+
+
+
+<script src="letra.js"></script>
+
+
+</body>
+
+</html>
