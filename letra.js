@@ -29,7 +29,7 @@ const palabras = [
 
 let tablero=[];
 
-let tamaño=12;
+let tamaño=20;
 
 let seleccion=[];
 
