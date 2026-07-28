@@ -217,8 +217,7 @@ button:hover{
     margin:20px auto;
 
     user-select:none;
-
-    touch-action:none;
+    touch-action:auto;
 
 }
 
