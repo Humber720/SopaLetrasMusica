@@ -1,279 +1,232 @@
 // ===============================
-// SOPA DE LETRAS TECNOLOGÍA MUSICAL
+// SOPA DE LETRAS - TECNOLOGÍA MUSICAL
 // ===============================
 
-
 const palabras = [
-
-"ABLETON",
-"TECNOLOGIAMUSICAL",
-"COURSERA",
-"FINALE",
-"GARAGEBAND",
-"LOGICPRO",
-"MUSICGARDEN",
-"SIMPLYPIANO",
-"TENUTO",
-"AURALIA",
-"EARMASTER",
-"FLSTUDIO",
-"GUITARTUNA",
-"MUSESCORE",
-"SIBELIUS",
-"SOLFA",
-"YOUSICIAN"
-
+    "ABLETON",
+    "TECNOLOGIAMUSICAL",
+    "COURSERA",
+    "FINALE",
+    "GARAGEBAND",
+    "LOGICPRO",
+    "MUSICGARDEN",
+    "SIMPLYPIANO",
+    "TENUTO",
+    "AURALIA",
+    "EARMASTER",
+    "FLSTUDIO",
+    "GUITARTUNA",
+    "MUSESCORE",
+    "SIBELIUS",
+    "SOLFA",
+    "YOUSICIAN"
 ];
 
+let tablero = [];
 
+let tamaño = 20;
 
-let tablero=[];
+let seleccion = [];
 
-let tamaño=20;
+let encontradas = [];
 
-let seleccion=[];
+let puntaje = 0;
 
-let encontradas=[];
-
-let puntaje=0;
-
-
-let segundos=0;
+let segundos = 0;
 
 let reloj;
 
+let nombreEstudiante = "";
 
+let seleccionando = false;
 
-let nombreEstudiante="";
+let celdaInicio = null;
 
+let ultimaCelda = null;
 
 
 // ===============================
 // INICIAR JUEGO
 // ===============================
 
+function iniciarJuego() {
 
-function iniciarJuego(){
+    nombreEstudiante =
+        document.getElementById("nombre").value.trim();
 
+    if (nombreEstudiante === "") {
 
-nombreEstudiante =
-document.getElementById("nombre").value.trim();
+        alert("Por favor escribe tu nombre");
 
+        return;
+    }
 
+    // Reiniciar completamente
+    clearInterval(reloj);
 
-if(nombreEstudiante==""){
+    encontradas = [];
 
-alert("Por favor escribe tu nombre");
+    puntaje = 0;
 
-return;
+    segundos = 0;
 
+    seleccion = [];
+
+    seleccionando = false;
+
+    celdaInicio = null;
+
+    ultimaCelda = null;
+
+    document.getElementById("puntaje").innerHTML = "0";
+
+    document.getElementById("tiempo").innerHTML = "00:00";
+
+    document.getElementById("resultado").innerHTML = "";
+
+    actualizarLista();
+
+    crearTablero();
+
+    iniciarTiempo();
 }
-
-
-
-crearTablero();
-
-iniciarTiempo();
-
-
-document.getElementById("resultado").innerHTML="";
-
-
-}
-
-
-
 
 
 // ===============================
 // CREAR TABLERO
 // ===============================
 
+function crearTablero() {
 
-function crearTablero(){
+    tablero = [];
+
+    for (let i = 0; i < tamaño; i++) {
+
+        let fila = [];
+
+        for (let j = 0; j < tamaño; j++) {
+
+            fila.push("");
+        }
+
+        tablero.push(fila);
+    }
 
 
-tablero=[];
+    // Colocar palabras
+
+    palabras.forEach(palabra => {
+
+        colocarPalabra(palabra);
+
+    });
 
 
-for(let i=0;i<tamaño;i++){
+    // Completar espacios
+
+    for (let i = 0; i < tamaño; i++) {
+
+        for (let j = 0; j < tamaño; j++) {
+
+            if (tablero[i][j] === "") {
+
+                tablero[i][j] =
+                    String.fromCharCode(
+                        65 + Math.floor(Math.random() * 26)
+                    );
+            }
+        }
+    }
 
 
-let fila=[];
-
-
-for(let j=0;j<tamaño;j++){
-
-
-fila.push("");
-
+    mostrarTablero();
 }
-
-
-tablero.push(fila);
-
-
-}
-
-
-
-
-// colocar palabras
-
-
-palabras.forEach(p=>{
-
-
-colocarPalabra(p);
-
-
-});
-
-
-
-// completar espacios
-
-
-for(let i=0;i<tamaño;i++){
-
-for(let j=0;j<tamaño;j++){
-
-
-if(tablero[i][j]==""){
-
-
-tablero[i][j]=
-String.fromCharCode(
-65+Math.floor(Math.random()*26)
-);
-
-
-}
-
-
-}
-
-
-}
-
-
-
-
-mostrarTablero();
-
-
-}
-
-
-
 
 
 // ===============================
-// COLOCAR PALABRAS
+// COLOCAR PALABRA
 // ===============================
-function colocarPalabra(palabra){
 
-let direcciones=[
-[0,1],
-[1,0],
-[1,1],
-[-1,1]
-];
+function colocarPalabra(palabra) {
 
+    const direcciones = [
+        [0, 1],
+        [1, 0],
+        [1, 1],
+        [-1, 1]
+    ];
 
-for(let intento=0; intento<500; intento++){
+    for (let intento = 0; intento < 500; intento++) {
 
+        const direccion =
+            direcciones[
+                Math.floor(
+                    Math.random() * direcciones.length
+                )
+            ];
 
-let direccion=
-direcciones[
-Math.floor(Math.random()*direcciones.length)
-];
+        const fila =
+            Math.floor(Math.random() * tamaño);
 
+        const col =
+            Math.floor(Math.random() * tamaño);
 
-let fila=
-Math.floor(Math.random()*tamaño);
-
-
-let col=
-Math.floor(Math.random()*tamaño);
-
-
-
-let puede=true;
+        let puede = true;
 
 
+        for (let i = 0; i < palabra.length; i++) {
 
-for(let i=0;i<palabra.length;i++){
+            const nuevaFila =
+                fila + direccion[0] * i;
 
-
-let nuevaFila=fila+(direccion[0]*i);
-
-let nuevaCol=col+(direccion[1]*i);
-
-
-
-if(
-nuevaFila<0 ||
-nuevaFila>=tamaño ||
-nuevaCol<0 ||
-nuevaCol>=tamaño
-){
-
-puede=false;
-
-break;
-
-}
+            const nuevaCol =
+                col + direccion[1] * i;
 
 
+            if (
+                nuevaFila < 0 ||
+                nuevaFila >= tamaño ||
+                nuevaCol < 0 ||
+                nuevaCol >= tamaño
+            ) {
 
-if(
-tablero[nuevaFila][nuevaCol]!="" &&
-tablero[nuevaFila][nuevaCol]!=palabra[i]
-){
+                puede = false;
 
-puede=false;
-
-break;
-
-}
-
-
-
-}
+                break;
+            }
 
 
+            if (
+                tablero[nuevaFila][nuevaCol] !== "" &&
+                tablero[nuevaFila][nuevaCol] !== palabra[i]
+            ) {
+
+                puede = false;
+
+                break;
+            }
+        }
 
 
-if(puede){
+        if (puede) {
 
+            for (let i = 0; i < palabra.length; i++) {
 
-for(let i=0;i<palabra.length;i++){
+                const nuevaFila =
+                    fila + direccion[0] * i;
 
+                const nuevaCol =
+                    col + direccion[1] * i;
 
-let nuevaFila=fila+(direccion[0]*i);
+                tablero[nuevaFila][nuevaCol] =
+                    palabra[i];
+            }
 
-let nuevaCol=col+(direccion[1]*i);
+            return true;
+        }
+    }
 
-
-tablero[nuevaFila][nuevaCol]=palabra[i];
-
-
-}
-
-
-return true;
-
-
-}
-
-
-}
-
-
-return false;
-
-
+    return false;
 }
 
 
@@ -281,315 +234,569 @@ return false;
 // MOSTRAR TABLERO
 // ===============================
 
+function mostrarTablero() {
 
-function mostrarTablero(){
+    const div =
+        document.getElementById("tablero");
 
-
-let div=document.getElementById("tablero");
-
-
-div.innerHTML="";
+    div.innerHTML = "";
 
 
-for(let i=0;i<tamaño;i++){
+    for (let i = 0; i < tamaño; i++) {
+
+        for (let j = 0; j < tamaño; j++) {
+
+            const letra =
+                document.createElement("div");
+
+            letra.className = "letra";
+
+            letra.textContent =
+                tablero[i][j];
+
+            letra.dataset.fila = i;
+
+            letra.dataset.col = j;
 
 
-for(let j=0;j<tamaño;j++){
+            // ===========================
+            // POINTER DOWN
+            // ===========================
+
+            letra.addEventListener(
+                "pointerdown",
+                iniciarSeleccion
+            );
 
 
-let letra=document.createElement("div");
+            // ===========================
+            // POINTER MOVE
+            // ===========================
+
+            letra.addEventListener(
+                "pointerenter",
+                moverSeleccion
+            );
 
 
-letra.className="letra";
+            div.appendChild(letra);
+        }
+    }
 
 
-letra.innerHTML=tablero[i][j];
+    // Capturar movimiento directamente
+    div.addEventListener(
+        "pointermove",
+        detectarMovimiento
+    );
 
+    div.addEventListener(
+        "pointerup",
+        finalizarSeleccion
+    );
 
-letra.dataset.fila=i;
+    div.addEventListener(
+        "pointercancel",
+        cancelarSeleccion
+    );
 
-letra.dataset.col=j;
-
-
-
-letra.onclick=function(){
-
-
-seleccionar(letra);
-
-
-};
-
-
-
-div.appendChild(letra);
-
-
+    div.addEventListener(
+        "pointerleave",
+        detectarMovimiento
+    );
 }
-
-
-}
-
-
-
-}
-
-
-
 
 
 // ===============================
-// SELECCIONAR LETRAS
+// INICIAR SELECCIÓN
 // ===============================
 
+function iniciarSeleccion(event) {
 
-function seleccionar(celda){
+    if (event.pointerType === "mouse" && event.button !== 0) {
+        return;
+    }
 
+    if (event.currentTarget.classList.contains("encontrada")) {
+        return;
+    }
 
-celda.classList.toggle("seleccionada");
+    event.preventDefault();
 
+    seleccionando = true;
 
-let texto=
+    celdaInicio = event.currentTarget;
 
+    ultimaCelda = celdaInicio;
 
-Array.from(
-document.querySelectorAll(".seleccionada")
-)
-.map(x=>x.innerHTML)
-.join("");
+    limpiarSeleccionTemporal();
 
-
-
-buscarPalabra(texto);
-
-
-
+    seleccionarLinea(
+        celdaInicio,
+        celdaInicio
+    );
 }
-
-
-
 
 
 // ===============================
-// BUSCAR PALABRA
+// MOVER SELECCIÓN
 // ===============================
 
+function moverSeleccion(event) {
 
-function buscarPalabra(texto){
+    if (!seleccionando) {
+        return;
+    }
 
+    event.preventDefault();
 
-palabras.forEach(p=>{
-
-
-if(texto==p && !encontradas.includes(p)){
-
-
-encontradas.push(p);
-
-
-puntaje+=10;
-
-
-
-document.getElementById("puntaje")
-.innerHTML=puntaje;
-
-
-
-marcarPalabra();
-
-
-
-actualizarLista();
-
-
-
-verificarFinal();
-
-
-
+    actualizarSeleccion(event.currentTarget);
 }
 
 
+// ===============================
+// DETECTAR MOVIMIENTO
+// ===============================
 
-});
+function detectarMovimiento(event) {
+
+    if (!seleccionando) {
+        return;
+    }
+
+    event.preventDefault();
+
+    const elemento =
+        document.elementFromPoint(
+            event.clientX,
+            event.clientY
+        );
 
 
+    if (
+        elemento &&
+        elemento.classList.contains("letra")
+    ) {
+
+        actualizarSeleccion(elemento);
+    }
 }
 
 
+// ===============================
+// ACTUALIZAR SELECCIÓN
+// ===============================
 
+function actualizarSeleccion(celdaFinal) {
 
-function marcarPalabra(){
+    if (!celdaInicio) {
+        return;
+    }
 
+    if (celdaFinal.classList.contains("encontrada")) {
+        return;
+    }
 
-document.querySelectorAll(".seleccionada")
-.forEach(x=>{
+    if (ultimaCelda === celdaFinal) {
+        return;
+    }
 
+    ultimaCelda = celdaFinal;
 
-x.classList.remove("seleccionada");
-
-x.classList.add("encontrada");
-
-
-});
-
-
+    seleccionarLinea(
+        celdaInicio,
+        celdaFinal
+    );
 }
 
 
+// ===============================
+// SELECCIONAR LÍNEA
+// ===============================
+
+function seleccionarLinea(inicio, fin) {
+
+    limpiarSeleccionTemporal();
+
+    const filaInicio =
+        parseInt(inicio.dataset.fila);
+
+    const colInicio =
+        parseInt(inicio.dataset.col);
+
+    const filaFin =
+        parseInt(fin.dataset.fila);
+
+    const colFin =
+        parseInt(fin.dataset.col);
 
 
-function actualizarLista(){
+    const diferenciaFila =
+        filaFin - filaInicio;
+
+    const diferenciaCol =
+        colFin - colInicio;
 
 
-document.querySelectorAll("#listaPalabras li")
-.forEach(li=>{
+    // Solo líneas rectas o diagonales
+
+    const esHorizontal =
+        diferenciaFila === 0;
+
+    const esVertical =
+        diferenciaCol === 0;
+
+    const esDiagonal =
+        Math.abs(diferenciaFila) ===
+        Math.abs(diferenciaCol);
 
 
-if(encontradas.includes(li.innerHTML)){
+    if (
+        !esHorizontal &&
+        !esVertical &&
+        !esDiagonal
+    ) {
 
-li.classList.add("correcta");
+        return;
+    }
 
+
+    const pasoFila =
+        Math.sign(diferenciaFila);
+
+    const pasoCol =
+        Math.sign(diferenciaCol);
+
+
+    const cantidad =
+        Math.max(
+            Math.abs(diferenciaFila),
+            Math.abs(diferenciaCol)
+        );
+
+
+    seleccion = [];
+
+
+    for (let i = 0; i <= cantidad; i++) {
+
+        const fila =
+            filaInicio + pasoFila * i;
+
+        const col =
+            colInicio + pasoCol * i;
+
+
+        const celda =
+            document.querySelector(
+                `.letra[data-fila="${fila}"][data-col="${col}"]`
+            );
+
+
+        if (celda) {
+
+            if (!celda.classList.contains("encontrada")) {
+
+                celda.classList.add("seleccionada");
+
+                seleccion.push(celda);
+            }
+        }
+    }
 }
 
 
-});
+// ===============================
+// FINALIZAR SELECCIÓN
+// ===============================
 
+function finalizarSeleccion(event) {
 
+    if (!seleccionando) {
+        return;
+    }
+
+    event.preventDefault();
+
+    seleccionando = false;
+
+    verificarSeleccion();
+
+    celdaInicio = null;
+
+    ultimaCelda = null;
 }
 
 
+// ===============================
+// CANCELAR SELECCIÓN
+// ===============================
 
+function cancelarSeleccion() {
+
+    if (!seleccionando) {
+        return;
+    }
+
+    seleccionando = false;
+
+    limpiarSeleccionTemporal();
+
+    seleccion = [];
+
+    celdaInicio = null;
+
+    ultimaCelda = null;
+}
+
+
+// ===============================
+// VERIFICAR PALABRA
+// ===============================
+
+function verificarSeleccion() {
+
+    if (seleccion.length === 0) {
+        return;
+    }
+
+
+    const texto =
+        seleccion
+            .map(celda => celda.textContent)
+            .join("");
+
+
+    const textoInverso =
+        texto
+            .split("")
+            .reverse()
+            .join("");
+
+
+    let palabraEncontrada = null;
+
+
+    palabras.forEach(palabra => {
+
+        if (
+            !encontradas.includes(palabra) &&
+            (
+                texto === palabra ||
+                textoInverso === palabra
+            )
+        ) {
+
+            palabraEncontrada = palabra;
+        }
+    });
+
+
+    if (palabraEncontrada) {
+
+        encontradas.push(
+            palabraEncontrada
+        );
+
+        puntaje += 10;
+
+
+        document.getElementById("puntaje")
+            .innerHTML = puntaje;
+
+
+        seleccion.forEach(celda => {
+
+            celda.classList.remove(
+                "seleccionada"
+            );
+
+            celda.classList.add(
+                "encontrada"
+            );
+        });
+
+
+        actualizarLista();
+
+        verificarFinal();
+
+    } else {
+
+        // Selección incorrecta:
+        // se elimina completamente
+
+        limpiarSeleccionTemporal();
+    }
+
+
+    seleccion = [];
+}
+
+
+// ===============================
+// LIMPIAR SELECCIÓN TEMPORAL
+// ===============================
+
+function limpiarSeleccionTemporal() {
+
+    document
+        .querySelectorAll(".letra.seleccionada")
+        .forEach(celda => {
+
+            celda.classList.remove(
+                "seleccionada"
+            );
+        });
+}
+
+
+// ===============================
+// ACTUALIZAR LISTA
+// ===============================
+
+function actualizarLista() {
+
+    document
+        .querySelectorAll("#listaPalabras li")
+        .forEach(li => {
+
+            if (
+                encontradas.includes(
+                    li.textContent.trim()
+                )
+            ) {
+
+                li.classList.add("correcta");
+
+            } else {
+
+                li.classList.remove("correcta");
+            }
+        });
+}
 
 
 // ===============================
 // CRONÓMETRO
 // ===============================
 
+function iniciarTiempo() {
 
-function iniciarTiempo(){
+    clearInterval(reloj);
 
+    segundos = 0;
 
-clearInterval(reloj);
+    reloj = setInterval(() => {
 
+        segundos++;
 
-segundos=0;
+        const min =
+            Math.floor(segundos / 60);
 
-
-reloj=setInterval(()=>{
-
-
-segundos++;
-
-
-let min=Math.floor(segundos/60);
-
-let seg=segundos%60;
+        const seg =
+            segundos % 60;
 
 
-document.getElementById("tiempo")
-.innerHTML=
+        document.getElementById("tiempo")
+            .innerHTML =
+                String(min).padStart(2, "0")
+                + ":"
+                +
+                String(seg).padStart(2, "0");
 
-String(min).padStart(2,"0")
-+":"+
-String(seg).padStart(2,"0");
-
-
-},1000);
-
-
-
+    }, 1000);
 }
-
-
-
 
 
 // ===============================
 // FINAL DEL JUEGO
 // ===============================
 
+function verificarFinal() {
 
-function verificarFinal(){
+    if (
+        encontradas.length ===
+        palabras.length
+    ) {
 
-
-
-if(encontradas.length==palabras.length){
-
-
-clearInterval(reloj);
-
+        clearInterval(reloj);
 
 
-let minutos=Math.floor(segundos/60);
+        const minutos =
+            Math.floor(segundos / 60);
 
-let seg=segundos%60;
-
-
-
-document.getElementById("resultado").innerHTML=
+        const seg =
+            segundos % 60;
 
 
-`
-🎉 FELICIDADES ${nombreEstudiante}
+        document.getElementById(
+            "resultado"
+        ).innerHTML =
 
-<br><br>
+            `
+            🎉 FELICIDADES ${nombreEstudiante}
 
-🔎 Palabras encontradas:
-${encontradas.length}/${palabras.length}
+            <br><br>
 
-<br><br>
+            🔎 Palabras encontradas:
+            ${encontradas.length}/${palabras.length}
 
-⭐ Puntaje final:
-${puntaje} puntos
+            <br><br>
 
-<br><br>
+            ⭐ Puntaje final:
+            ${puntaje} puntos
 
-⏱ Tiempo:
-${minutos} minutos ${seg} segundos
+            <br><br>
 
-`;
-
-
-
+            ⏱ Tiempo:
+            ${minutos} minutos ${seg} segundos
+            `;
+    }
 }
-
-
-
-}
-
-
-
 
 
 // ===============================
 // REINICIAR
 // ===============================
 
+function reiniciarJuego() {
 
-function reiniciarJuego(){
+    clearInterval(reloj);
 
+    encontradas = [];
 
-clearInterval(reloj);
+    puntaje = 0;
 
+    segundos = 0;
 
-encontradas=[];
+    seleccion = [];
 
-puntaje=0;
+    seleccionando = false;
 
-segundos=0;
+    celdaInicio = null;
 
-
-document.getElementById("puntaje").innerHTML=0;
-
-document.getElementById("tiempo").innerHTML="00:00";
-
-
-document.getElementById("resultado").innerHTML="";
+    ultimaCelda = null;
 
 
-crearTablero();
+    document.getElementById(
+        "puntaje"
+    ).innerHTML = "0";
 
 
+    document.getElementById(
+        "tiempo"
+    ).innerHTML = "00:00";
+
+
+    document.getElementById(
+        "resultado"
+    ).innerHTML = "";
+
+
+    actualizarLista();
+
+    crearTablero();
+
+    iniciarTiempo();
 }
