@@ -133,9 +133,10 @@ button:hover {
 #tablero {
     display: grid;
 
-    grid-template-columns: repeat(20, 1fr);
+    /* Exactamente 20 columnas */
+    grid-template-columns: repeat(20, minmax(0, 1fr));
 
-    gap: 4px;
+    gap: 2px;
 
     width: 100%;
     max-width: 700px;
@@ -146,10 +147,11 @@ button:hover {
     -webkit-user-select: none;
 
     touch-action: none;
-
     -webkit-touch-callout: none;
 
     cursor: crosshair;
+
+    overflow: hidden;
 }
 
 /* ===============================
@@ -158,6 +160,9 @@ button:hover {
 
 .letra {
     aspect-ratio: 1 / 1;
+
+    width: 100%;
+    min-width: 0;
 
     display: flex;
 
@@ -170,9 +175,9 @@ button:hover {
 
     font-weight: bold;
 
-    font-size: clamp(11px, 2.5vw, 23px);
+    font-size: clamp(10px, 2.5vw, 23px);
 
-    border-radius: 6px;
+    border-radius: 5px;
 
     cursor: pointer;
 
